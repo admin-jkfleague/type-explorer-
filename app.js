@@ -1,5 +1,5 @@
 // JKF League — Type Explorer (dual-type)
-// Layout: controls left + mascot, primary dealt right; bottom has taken + secondary dealt
+// Now shows ALL THREE cards at load with placeholder rows
 
 const typeChart = {
   normal: { damageTakenFrom: { fighting: 2, ghost: 0 }, damageDealtTo: { rock: 0.5, ghost: 0, steel: 0.5 } },
@@ -88,15 +88,21 @@ function dealtFor(type){
   return extractCategoryMap(map);
 }
 
+/* --- NEW: placeholder rows so all three cards show content at load --- */
+function renderEmptyAll(){
+  const emptyCats = JSON.parse(JSON.stringify(standardCategories));
+  renderTable(takenTable, emptyCats);
+  renderTable(dealt1Table, emptyCats);
+  renderTable(dealt2Table, emptyCats);
+}
+
 function run(){
   const t1 = primarySel.value;
   const t2 = secondarySel.value || null;
 
   if (!t1){
-    takenTable.innerHTML = '';
-    dealt1Table.innerHTML = '';
-    dealt2Table.innerHTML = '';
-    secondaryCard.hidden = true;
+    // keep cards visible with placeholders
+    renderEmptyAll();
     return;
   }
 
@@ -113,30 +119,22 @@ function run(){
   if (t2){
     const d2 = dealtFor(t2);
     renderTable(dealt2Table, d2);
-    secondaryCard.hidden = false;
   } else {
-    dealt2Table.innerHTML = '';
-    secondaryCard.hidden = true;
+    renderTable(dealt2Table, JSON.parse(JSON.stringify(standardCategories))); // empty rows
   }
-}
-
-function hydrateFromURL(){
-  // (keeping URL-free to match your mock; easy to add back if you want)
 }
 
 function resetAll(){
   primarySel.selectedIndex = 0;
   secondarySel.selectedIndex = 0;
-  takenTable.innerHTML = '';
-  dealt1Table.innerHTML = '';
-  dealt2Table.innerHTML = '';
-  secondaryCard.hidden = true;
+  renderEmptyAll();
 }
 
 // Init
 document.addEventListener('DOMContentLoaded', () => {
   if (yearSpan) yearSpan.textContent = new Date().getFullYear();
   buildOptions();
+  renderEmptyAll(); // <-- show all three on load
 
   runBtn.addEventListener('click', run);
   resetBtn.addEventListener('click', resetAll);
