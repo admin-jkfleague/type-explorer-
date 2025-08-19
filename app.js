@@ -1,6 +1,5 @@
-// JKF League — Type Explorer (GitHub version)
+// JKF League — Type Explorer (GitHub version, no share/copy/beta)
 // Dual-type damage-taken & damage-dealt viewer
-// Uses the same chart & categories as your Wix version
 
 const typeChart = {
   normal: { damageTakenFrom: { fighting: 2, ghost: 0 }, damageDealtTo: { rock: 0.5, ghost: 0, steel: 0.5 } },
@@ -36,7 +35,6 @@ const primarySel = document.getElementById('primaryType');
 const secondarySel = document.getElementById('secondaryType');
 const runBtn = document.getElementById('runBtn');
 const resetBtn = document.getElementById('resetBtn');
-const shareBtn = document.getElementById('shareLinkBtn');
 const yearSpan = document.getElementById('year');
 const secondaryCard = document.getElementById('secondaryCard');
 
@@ -44,26 +42,14 @@ const takenTable = document.getElementById('damageTakenTable').querySelector('tb
 const dealt1Table = document.getElementById('primaryDealtTable').querySelector('tbody');
 const dealt2Table = document.getElementById('secondaryDealtTable').querySelector('tbody');
 
-const copyTakenBtn = document.getElementById('copyTaken');
-const copyDealt1Btn = document.getElementById('copyDealt1');
-const copyDealt2Btn = document.getElementById('copyDealt2');
+// Pager (mobile)
+const pagerLabel = document.getElementById('pagerLabel');
+const prevBtn = document.getElementById('prevResult');
+const nextBtn = document.getElementById('nextResult');
+const resultCards = Array.from(document.querySelectorAll('.result-card'));
+let currentResultIndex = 0;
 
-// Utilities
 const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
-const toast = (() => {
-  let node;
-  return (msg) => {
-    if (!node) {
-      node = document.createElement('div');
-      node.className = 'copy-toast';
-      node.innerHTML = `<div class="copy-chip"></div>`;
-      document.body.appendChild(node);
-    }
-    node.querySelector('.copy-chip').textContent = msg;
-    node.classList.add('show');
-    setTimeout(() => node.classList.remove('show'), 1300);
-  };
-})();
 
 function buildOptions() {
   const types = Object.keys(typeChart);
@@ -112,11 +98,13 @@ function dealtFor(type){
 function run(){
   const t1 = primarySel.value;
   const t2 = secondarySel.value || null;
+
   if (!t1){
     takenTable.innerHTML = '';
     dealt1Table.innerHTML = '';
     dealt2Table.innerHTML = '';
     secondaryCard.hidden = true;
+    updatePager();
     return;
   }
 
@@ -140,12 +128,13 @@ function run(){
   }
 
   updateURL(t1, t2);
+  updatePager();
 }
 
 function updateURL(t1, t2){
   const url = new URL(window.location.href);
-  url.searchParams.set('primary', t1 || '');
-  url.searchParams.set('secondary', t2 || '');
+  if (t1) url.searchParams.set('primary', t1); else url.searchParams.delete('primary');
+  if (t2) url.searchParams.set('secondary', t2); else url.searchParams.delete('secondary');
   history.replaceState(null, '', url.toString());
 }
 
@@ -158,18 +147,38 @@ function hydrateFromURL(){
   if (p) run();
 }
 
-async function copyTable(tbody){
-  const text = [...tbody.querySelectorAll('tr')].map(tr => {
-    const tds = tr.querySelectorAll('td');
-    return `${tds[0].textContent}  |  ${tds[1].textContent}`;
-  }).join('\n');
-  try{
-    await navigator.clipboard.writeText(text);
-    toast('Copied!');
-  }catch{
-    toast('Copy failed');
+// ===== Pager (mobile) logic =====
+function updatePager(){
+  // Make only one card visible on mobile
+  const visibleCards = resultCards.filter(c => !c.hidden);
+  // Clamp index
+  if (currentResultIndex >= visibleCards.length) currentResultIndex = visibleCards.length - 1;
+  if (currentResultIndex < 0) currentResultIndex = 0;
+
+  const isMobile = window.matchMedia('(max-width: 980px)').matches;
+  if (isMobile){
+    visibleCards.forEach((c, i) => c.classList.toggle('active', i === currentResultIndex));
+    pagerLabel.textContent = `${visibleCards.length ? currentResultIndex + 1 : 0} / ${visibleCards.length}`;
+  } else {
+    // Desktop: all visible
+    visibleCards.forEach(c => c.classList.add('active'));
+    pagerLabel.textContent = '';
   }
+
+  // Enable/disable buttons
+  prevBtn.disabled = currentResultIndex <= 0 || !isMobile;
+  nextBtn.disabled = currentResultIndex >= visibleCards.length - 1 || !isMobile;
 }
+
+function goPrev(){
+  currentResultIndex -= 1;
+  updatePager();
+}
+function goNext(){
+  currentResultIndex += 1;
+  updatePager();
+}
+// ===== End pager =====
 
 function resetAll(){
   primarySel.selectedIndex = 0;
@@ -179,18 +188,8 @@ function resetAll(){
   dealt2Table.innerHTML = '';
   secondaryCard.hidden = true;
   updateURL('', '');
-}
-
-function copyShareLink(){
-  const url = new URL(window.location.href);
-  if (!primarySel.value){
-    // Pre-populate with current selections even if blank
-    url.searchParams.delete('primary');
-    url.searchParams.delete('secondary');
-  }
-  navigator.clipboard.writeText(url.toString())
-    .then(() => toast('Link copied!'))
-    .catch(() => toast('Copy failed'));
+  currentResultIndex = 0;
+  updatePager();
 }
 
 // Init
@@ -198,19 +197,25 @@ document.addEventListener('DOMContentLoaded', () => {
   yearSpan.textContent = new Date().getFullYear();
   buildOptions();
   hydrateFromURL();
+  updatePager();
 
   runBtn.addEventListener('click', run);
   resetBtn.addEventListener('click', resetAll);
-  shareBtn.addEventListener('click', copyShareLink);
-
-  copyTakenBtn.addEventListener('click', () => copyTable(takenTable));
-  copyDealt1Btn.addEventListener('click', () => copyTable(dealt1Table));
-  copyDealt2Btn.addEventListener('click', () => copyTable(dealt2Table));
+  prevBtn.addEventListener('click', goPrev);
+  nextBtn.addEventListener('click', goNext);
 
   // Enter key runs explorer (nice UX)
   [primarySel, secondarySel].forEach(el => {
     el.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') run();
     });
+    el.addEventListener('change', () => {
+      // If user adds/removes secondary on mobile, reset to first card
+      currentResultIndex = 0;
+      updatePager();
+    });
   });
+
+  // Re-evaluate pager on resize (switching between mobile/desktop)
+  window.addEventListener('resize', updatePager);
 });
