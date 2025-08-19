@@ -7,7 +7,6 @@
   <meta name="description" content="Pokémon Type Explorer (dual-type): see combined damage taken and damage dealt charts." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <!-- Bai Jamjuree (user preferred) -->
   <link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./styles.css" />
 </head>
@@ -16,7 +15,6 @@
     <div class="container header-wrap">
       <h1 class="brand">The JKF League</h1>
       <nav class="actions">
-        <button id="shareLinkBtn" class="btn ghost" aria-label="Copy shareable link">Share</button>
         <button id="resetBtn" class="btn ghost" aria-label="Reset selections">Reset</button>
       </nav>
     </div>
@@ -24,7 +22,7 @@
 
   <main class="container">
     <section class="intro">
-      <h2 class="title">Type Explorer <span class="badge">beta</span></h2>
+      <h2 class="title">Type Explorer</h2>
       <p class="sub">Select one or two defending types. We’ll compute combined <strong>damage taken</strong> and show <strong>damage dealt</strong> for each attacking type.</p>
     </section>
 
@@ -42,11 +40,17 @@
       </div>
     </section>
 
-    <section class="grid">
-      <article class="card">
+    <!-- Results pager (visible on small screens only) -->
+    <div class="pager" aria-label="Result pages (mobile)">
+      <button class="btn tiny" id="prevResult" aria-label="Previous result">◀</button>
+      <span id="pagerLabel">1 / 3</span>
+      <button class="btn tiny" id="nextResult" aria-label="Next result">▶</button>
+    </div>
+
+    <section class="grid" id="resultsGrid">
+      <article class="card result-card" data-index="0">
         <header class="card-header">
           <h3>Damage Taken (as Defender)</h3>
-          <button class="btn tiny" id="copyTaken">Copy</button>
         </header>
         <div class="table-wrap">
           <table id="damageTakenTable">
@@ -58,10 +62,9 @@
         </div>
       </article>
 
-      <article class="card">
+      <article class="card result-card" data-index="1">
         <header class="card-header">
           <h3>Damage Dealt (Primary Attacker)</h3>
-          <button class="btn tiny" id="copyDealt1">Copy</button>
         </header>
         <div class="table-wrap">
           <table id="primaryDealtTable">
@@ -73,10 +76,9 @@
         </div>
       </article>
 
-      <article class="card" id="secondaryCard" hidden>
+      <article class="card result-card" id="secondaryCard" data-index="2" hidden>
         <header class="card-header">
           <h3>Damage Dealt (Secondary Attacker)</h3>
-          <button class="btn tiny" id="copyDealt2">Copy</button>
         </header>
         <div class="table-wrap">
           <table id="secondaryDealtTable">
