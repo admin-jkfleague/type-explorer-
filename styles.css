@@ -10,7 +10,8 @@
 }
 
 *{ box-sizing: border-box; }
-/* ⬇ Prevent any stray horizontal scrollbar */
+
+/* prevent any horizontal scrollbar, just in case */
 html, body{ height:100%; overflow-x:hidden; }
 
 body{
@@ -43,6 +44,7 @@ body{
   border:1px solid #25284a; border-radius: var(--radius);
   box-shadow: 0 10px 30px rgba(0,0,0,.25);
   padding:16px;
+  min-width:0; /* allow shrinking within grid */
 }
 
 /* Controls */
@@ -67,35 +69,29 @@ select:focus{ box-shadow: 0 0 0 6px var(--ring); }
   border-color:#ffb03a; color:#2b2100; font-weight:700;
 }
 .btn.ghost{ background:#0f1330; }
-.btn.tiny{ font-size:12px; padding:6px 10px; }
 
-/* RESULTS GRID */
-/* ⬇ Auto-fit columns so cards wrap instead of overflowing */
+/* ===== Results layout ===== */
+/* Top grid: two-up (auto wraps to one column on narrow screens) */
 .grid{
-  display:grid; gap:14px;
+  display:grid;
+  gap:14px;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   width:100%;
 }
 
-/* Pager shows only on small screens */
-.pager{
-  display:none; align-items:center; justify-content:center; gap:10px;
-  margin: 8px 0 14px;
-}
-@media (max-width: 980px){
-  .controls{ grid-template-columns: 1fr; }
-  .pager{ display:flex; }
+/* Secondary wrapper is always single column and sits below */
+.grid.single{
+  grid-template-columns: 1fr !important;
 }
 
 /* Card header */
 .card-header{ display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
 .card h3{ margin:0; font-size:18px; }
 
-/* Tables: keep everything inside card; no horizontal scroll */
+/* Tables: keep inside card; no horizontal scroll */
 .table-wrap{
-  overflow: hidden;
+  overflow:hidden;
   border-radius:12px; border:1px solid #2a2f57;
-  /* ⬇ allow shrinking within grid cell */
   min-width:0;
 }
 table{
@@ -109,9 +105,11 @@ th, td{
 }
 tbody tr:last-child td{ border-bottom:none; }
 
-/* Result cards: ensure they can shrink within grid */
-.result-card{ display:block; min-width:0; }
-
 .notes{ margin:18px 0 8px; color:var(--muted); }
 details{ background:#0f1330; padding:10px 12px; border:1px solid #2a2f57; border-radius:12px; }
 summary{ cursor:pointer; font-weight:600; }
+
+@media (max-width: 980px){
+  .controls{ grid-template-columns: 1fr; }
+}
+
