@@ -1,5 +1,5 @@
-// JKF League — Type Explorer (GitHub version, no share/copy/beta)
-// Dual-type damage-taken & damage-dealt viewer
+// JKF League — Type Explorer (GitHub version)
+// Dual-type damage-taken & damage-dealt viewer (no share/copy/pager)
 
 const typeChart = {
   normal: { damageTakenFrom: { fighting: 2, ghost: 0 }, damageDealtTo: { rock: 0.5, ghost: 0, steel: 0.5 } },
@@ -41,13 +41,6 @@ const secondaryCard = document.getElementById('secondaryCard');
 const takenTable = document.getElementById('damageTakenTable').querySelector('tbody');
 const dealt1Table = document.getElementById('primaryDealtTable').querySelector('tbody');
 const dealt2Table = document.getElementById('secondaryDealtTable').querySelector('tbody');
-
-// Pager (mobile)
-const pagerLabel = document.getElementById('pagerLabel');
-const prevBtn = document.getElementById('prevResult');
-const nextBtn = document.getElementById('nextResult');
-const resultCards = Array.from(document.querySelectorAll('.result-card'));
-let currentResultIndex = 0;
 
 const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
 
@@ -104,7 +97,7 @@ function run(){
     dealt1Table.innerHTML = '';
     dealt2Table.innerHTML = '';
     secondaryCard.hidden = true;
-    updatePager();
+    updateURL('', '');
     return;
   }
 
@@ -128,7 +121,6 @@ function run(){
   }
 
   updateURL(t1, t2);
-  updatePager();
 }
 
 function updateURL(t1, t2){
@@ -147,39 +139,6 @@ function hydrateFromURL(){
   if (p) run();
 }
 
-// ===== Pager (mobile) logic =====
-function updatePager(){
-  // Make only one card visible on mobile
-  const visibleCards = resultCards.filter(c => !c.hidden);
-  // Clamp index
-  if (currentResultIndex >= visibleCards.length) currentResultIndex = visibleCards.length - 1;
-  if (currentResultIndex < 0) currentResultIndex = 0;
-
-  const isMobile = window.matchMedia('(max-width: 980px)').matches;
-  if (isMobile){
-    visibleCards.forEach((c, i) => c.classList.toggle('active', i === currentResultIndex));
-    pagerLabel.textContent = `${visibleCards.length ? currentResultIndex + 1 : 0} / ${visibleCards.length}`;
-  } else {
-    // Desktop: all visible
-    visibleCards.forEach(c => c.classList.add('active'));
-    pagerLabel.textContent = '';
-  }
-
-  // Enable/disable buttons
-  prevBtn.disabled = currentResultIndex <= 0 || !isMobile;
-  nextBtn.disabled = currentResultIndex >= visibleCards.length - 1 || !isMobile;
-}
-
-function goPrev(){
-  currentResultIndex -= 1;
-  updatePager();
-}
-function goNext(){
-  currentResultIndex += 1;
-  updatePager();
-}
-// ===== End pager =====
-
 function resetAll(){
   primarySel.selectedIndex = 0;
   secondarySel.selectedIndex = 0;
@@ -188,8 +147,6 @@ function resetAll(){
   dealt2Table.innerHTML = '';
   secondaryCard.hidden = true;
   updateURL('', '');
-  currentResultIndex = 0;
-  updatePager();
 }
 
 // Init
@@ -197,25 +154,15 @@ document.addEventListener('DOMContentLoaded', () => {
   yearSpan.textContent = new Date().getFullYear();
   buildOptions();
   hydrateFromURL();
-  updatePager();
 
   runBtn.addEventListener('click', run);
   resetBtn.addEventListener('click', resetAll);
-  prevBtn.addEventListener('click', goPrev);
-  nextBtn.addEventListener('click', goNext);
 
-  // Enter key runs explorer (nice UX)
+  // Enter key runs explorer
   [primarySel, secondarySel].forEach(el => {
     el.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') run();
     });
-    el.addEventListener('change', () => {
-      // If user adds/removes secondary on mobile, reset to first card
-      currentResultIndex = 0;
-      updatePager();
-    });
   });
-
-  // Re-evaluate pager on resize (switching between mobile/desktop)
-  window.addEventListener('resize', updatePager);
 });
+
