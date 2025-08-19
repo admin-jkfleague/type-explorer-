@@ -4,61 +4,40 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>JKF League — Type Explorer</title>
-  <meta name="description" content="Pokémon Type Explorer (dual-type): see combined damage taken and damage dealt charts." />
+  <meta name="description" content="Pokémon Type Explorer (dual-type): combined damage taken and damage dealt." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./styles.css" />
 </head>
 <body>
-  <header class="site-header">
-    <div class="container header-wrap">
-      <h1 class="brand">The JKF League</h1>
-      <nav class="actions">
-        <button id="resetBtn" class="btn ghost" aria-label="Reset selections">Reset</button>
-      </nav>
-    </div>
-  </header>
-
   <main class="container">
-    <section class="intro">
-      <h2 class="title">Type Explorer</h2>
-      <p class="sub">Select one or two defending types. We’ll compute combined <strong>damage taken</strong> and show <strong>damage dealt</strong> for each attacking type.</p>
-    </section>
+    <h1 class="page-title">Type Explorer</h1>
 
-    <section class="controls card">
-      <div class="control">
-        <label for="primaryType">Primary Type</label>
-        <select id="primaryType" aria-label="Select primary type"></select>
-      </div>
-      <div class="control">
-        <label for="secondaryType">Secondary Type (optional)</label>
-        <select id="secondaryType" aria-label="Select secondary type"></select>
-      </div>
-      <div class="control control-actions">
-        <button id="runBtn" class="btn primary">Run Explorer</button>
-      </div>
-    </section>
+    <!-- Top area: controls (left) + Primary Damage Dealt (right) -->
+    <section class="top-grid">
+      <div class="left-col">
+        <div class="panel controls card light">
+          <label for="primaryType" class="lbl">Primary Type</label>
+          <select id="primaryType"></select>
 
-    <!-- Main results: two-up (Taken + Primary) -->
-    <section class="grid" id="resultsGrid">
-      <article class="card result-card">
-        <header class="card-header">
-          <h3>Damage Taken (as Defender)</h3>
-        </header>
-        <div class="table-wrap">
-          <table id="damageTakenTable">
-            <thead>
-              <tr><th>Category</th><th>Types</th></tr>
-            </thead>
-            <tbody></tbody>
-          </table>
+          <label for="secondaryType" class="lbl">Secondary Type</label>
+          <select id="secondaryType"></select>
+
+          <button id="runBtn" class="btn go">GO!</button>
         </div>
-      </article>
 
-      <article class="card result-card">
+        <div class="mascot">
+          <!-- Update the src path to your image filename -->
+          <img src="./assets/psyduck-lab.png" alt="Psyduck in lab coat" />
+        </div>
+
+        <button id="resetBtn" class="btn reset">Reset</button>
+      </div>
+
+      <article class="card navy">
         <header class="card-header">
-          <h3>Damage Dealt (Primary Attacker)</h3>
+          <h2>Primary Damage Dealt</h2>
         </header>
         <div class="table-wrap">
           <table id="primaryDealtTable">
@@ -71,11 +50,25 @@
       </article>
     </section>
 
-    <!-- Secondary Attacker always sits below -->
-    <section class="grid single" id="secondaryWrapper">
-      <article class="card result-card" id="secondaryCard" hidden>
+    <!-- Bottom area: Damage Taken (tan) + Secondary Damage Dealt (navy) -->
+    <section class="bottom-grid">
+      <article class="card sand">
         <header class="card-header">
-          <h3>Damage Dealt (Secondary Attacker)</h3>
+          <h2>Damage Taken</h2>
+        </header>
+        <div class="table-wrap">
+          <table id="damageTakenTable">
+            <thead>
+              <tr><th>Category</th><th>Types</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </article>
+
+      <article class="card navy" id="secondaryCard" hidden>
+        <header class="card-header">
+          <h2>Secondary Damage Dealt</h2>
         </header>
         <div class="table-wrap">
           <table id="secondaryDealtTable">
@@ -88,21 +81,13 @@
       </article>
     </section>
 
-    <section class="notes">
-      <details>
-        <summary>How this works</summary>
-        <p>“Damage Taken” multiplies the defending types’ modifiers vs each attacking type (e.g., Fire vs Grass/Steel → 4×). “Damage Dealt” shows the offensive coverage of the selected type(s) as attackers against defenders.</p>
-      </details>
-    </section>
+    <footer class="site-footer">
+      <small>© <span id="year"></span> JKF League</small>
+    </footer>
   </main>
-
-  <footer class="site-footer">
-    <div class="container">
-      <small>© <span id="year"></span> JKF League • Built for trainers ⚡</small>
-    </div>
-  </footer>
 
   <script src="./app.js"></script>
 </body>
 </html>
+
 
