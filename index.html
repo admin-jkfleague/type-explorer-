@@ -1,93 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>JKF League — Type Explorer</title>
-  <meta name="description" content="Pokémon Type Explorer (dual-type): combined damage taken and damage dealt." />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./styles.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pokémon Type Explorer</title>
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-  <main class="container">
-    <h1 class="page-title">Type Explorer</h1>
+  <!-- Floating Reset Button -->
+  <button id="resetBtn" class="reset-button">Reset</button>
 
-    <!-- Top area: controls (left) + Primary Damage Dealt (right) -->
-    <section class="top-grid">
-      <div class="left-col">
-        <div class="panel controls card light">
-          <label for="primaryType" class="lbl">Primary Type</label>
-          <select id="primaryType"></select>
+  <div class="container">
+    <h1>Pokémon Type Explorer</h1>
+    <img src="psyduck.png" alt="Psyduck" class="mascot"/>
 
-          <label for="secondaryType" class="lbl">Secondary Type</label>
-          <select id="secondaryType"></select>
+    <!-- Type Selectors -->
+    <div class="selectors">
+      <select id="primaryType">
+        <option value="">Select Primary Type</option>
+      </select>
+      <select id="secondaryType">
+        <option value="">Select Secondary Type</option>
+      </select>
+      <button id="submitBtn">Analyze</button>
+    </div>
 
-          <button id="runBtn" class="btn go">GO!</button>
-        </div>
-
-        <div class="mascot">
-          <!-- Update the src path to your image filename -->
-          <img src="/pokemon-science-desktop-3x7zz8u78clyq48r_edited_edited.avif" alt="Psyduck in lab coat" />
-        </div>
-
-        <button id="resetBtn" class="btn reset">Reset</button>
+    <!-- Results Section -->
+    <div class="results-grid">
+      <div class="result-card">
+        <h2>Damage Taken</h2>
+        <table id="damageTakenTable">
+          <thead><tr><th>Category</th><th>Types</th></tr></thead>
+          <tbody></tbody>
+        </table>
       </div>
 
-      <article class="card navy tall">
-        <header class="card-header">
-          <h2>Primary Damage Dealt</h2>
-        </header>
-        <div class="table-wrap tall">
-          <table id="primaryDealtTable">
-            <thead>
-              <tr><th>Category</th><th>Types</th></tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-        </div>
-      </article>
-    </section>
+      <div class="result-card">
+        <h2>Primary Damage Dealt</h2>
+        <table id="primaryDealtTable">
+          <thead><tr><th>Category</th><th>Types</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
 
-    <!-- Bottom area: Damage Taken (tan) + Secondary Damage Dealt (navy) -->
-    <section class="bottom-grid">
-      <article class="card sand tall">
-        <header class="card-header">
-          <h2>Damage Taken</h2>
-        </header>
-        <div class="table-wrap tall">
-          <table id="damageTakenTable">
-            <thead>
-              <tr><th>Category</th><th>Types</th></tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-        </div>
-      </article>
+      <div class="result-card">
+        <h2>Secondary Damage Dealt</h2>
+        <table id="secondaryDealtTable">
+          <thead><tr><th>Category</th><th>Types</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 
-      <!-- NOTE: not hidden anymore; shows at load with placeholder rows -->
-      <article class="card navy tall" id="secondaryCard">
-        <header class="card-header">
-          <h2>Secondary Damage Dealt</h2>
-        </header>
-        <div class="table-wrap tall">
-          <table id="secondaryDealtTable">
-            <thead>
-              <tr><th>Category</th><th>Types</th></tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-        </div>
-      </article>
-    </section>
-
-    <footer class="site-footer">
-      <small>© <span id="year"></span> JKF League</small>
-    </footer>
-  </main>
-
-  <script src="./app.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
 
