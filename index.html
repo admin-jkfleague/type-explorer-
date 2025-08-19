@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>JKF League — Type Explorer</title>
+  <meta name="description" content="Pokémon Type Explorer (dual-type): see combined damage taken and damage dealt charts." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Bai Jamjuree (user preferred) -->
+  <link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-wrap">
+      <h1 class="brand">The JKF League</h1>
+      <nav class="actions">
+        <button id="shareLinkBtn" class="btn ghost" aria-label="Copy shareable link">Share</button>
+        <button id="resetBtn" class="btn ghost" aria-label="Reset selections">Reset</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="intro">
+      <h2 class="title">Type Explorer <span class="badge">beta</span></h2>
+      <p class="sub">Select one or two defending types. We’ll compute combined <strong>damage taken</strong> and show <strong>damage dealt</strong> for each attacking type.</p>
+    </section>
+
+    <section class="controls card">
+      <div class="control">
+        <label for="primaryType">Primary Type</label>
+        <select id="primaryType" aria-label="Select primary type"></select>
+      </div>
+      <div class="control">
+        <label for="secondaryType">Secondary Type (optional)</label>
+        <select id="secondaryType" aria-label="Select secondary type"></select>
+      </div>
+      <div class="control control-actions">
+        <button id="runBtn" class="btn primary">Run Explorer</button>
+      </div>
+    </section>
+
+    <section class="grid">
+      <article class="card">
+        <header class="card-header">
+          <h3>Damage Taken (as Defender)</h3>
+          <button class="btn tiny" id="copyTaken">Copy</button>
+        </header>
+        <div class="table-wrap">
+          <table id="damageTakenTable">
+            <thead>
+              <tr><th>Category</th><th>Types</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </article>
+
+      <article class="card">
+        <header class="card-header">
+          <h3>Damage Dealt (Primary Attacker)</h3>
+          <button class="btn tiny" id="copyDealt1">Copy</button>
+        </header>
+        <div class="table-wrap">
+          <table id="primaryDealtTable">
+            <thead>
+              <tr><th>Category</th><th>Types</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </article>
+
+      <article class="card" id="secondaryCard" hidden>
+        <header class="card-header">
+          <h3>Damage Dealt (Secondary Attacker)</h3>
+          <button class="btn tiny" id="copyDealt2">Copy</button>
+        </header>
+        <div class="table-wrap">
+          <table id="secondaryDealtTable">
+            <thead>
+              <tr><th>Category</th><th>Types</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </article>
+    </section>
+
+    <section class="notes">
+      <details>
+        <summary>How this works</summary>
+        <p>“Damage Taken” multiplies the defending types’ modifiers vs each attacking type (e.g., Fire vs Grass/Steel → 4×). “Damage Dealt” shows the offensive coverage of the selected type(s) as attackers against defenders.</p>
+      </details>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <small>© <span id="year"></span> JKF League • Built for trainers ⚡</small>
+    </div>
+  </footer>
+
+  <script src="./app.js"></script>
+</body>
+</html>
