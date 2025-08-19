@@ -1,5 +1,5 @@
-// JKF League — Type Explorer (GitHub version)
-// Dual-type damage-taken & damage-dealt viewer (no share/copy/pager)
+// JKF League — Type Explorer (dual-type)
+// Layout: controls left + mascot, primary dealt right; bottom has taken + secondary dealt
 
 const typeChart = {
   normal: { damageTakenFrom: { fighting: 2, ghost: 0 }, damageDealtTo: { rock: 0.5, ghost: 0, steel: 0.5 } },
@@ -97,7 +97,6 @@ function run(){
     dealt1Table.innerHTML = '';
     dealt2Table.innerHTML = '';
     secondaryCard.hidden = true;
-    updateURL('', '');
     return;
   }
 
@@ -119,24 +118,10 @@ function run(){
     dealt2Table.innerHTML = '';
     secondaryCard.hidden = true;
   }
-
-  updateURL(t1, t2);
-}
-
-function updateURL(t1, t2){
-  const url = new URL(window.location.href);
-  if (t1) url.searchParams.set('primary', t1); else url.searchParams.delete('primary');
-  if (t2) url.searchParams.set('secondary', t2); else url.searchParams.delete('secondary');
-  history.replaceState(null, '', url.toString());
 }
 
 function hydrateFromURL(){
-  const url = new URL(window.location.href);
-  const p = url.searchParams.get('primary') || '';
-  const s = url.searchParams.get('secondary') || '';
-  if (p) primarySel.value = p;
-  if (s !== null) secondarySel.value = s;
-  if (p) run();
+  // (keeping URL-free to match your mock; easy to add back if you want)
 }
 
 function resetAll(){
@@ -146,14 +131,12 @@ function resetAll(){
   dealt1Table.innerHTML = '';
   dealt2Table.innerHTML = '';
   secondaryCard.hidden = true;
-  updateURL('', '');
 }
 
 // Init
 document.addEventListener('DOMContentLoaded', () => {
-  yearSpan.textContent = new Date().getFullYear();
+  if (yearSpan) yearSpan.textContent = new Date().getFullYear();
   buildOptions();
-  hydrateFromURL();
 
   runBtn.addEventListener('click', run);
   resetBtn.addEventListener('click', resetAll);
