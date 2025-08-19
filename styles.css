@@ -10,7 +10,9 @@
 }
 
 *{ box-sizing: border-box; }
-html, body{ height:100%; }
+/* ⬇ Prevent any stray horizontal scrollbar */
+html, body{ height:100%; overflow-x:hidden; }
+
 body{
   margin:0;
   font-family:"Bai Jamjuree", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
@@ -43,6 +45,7 @@ body{
   padding:16px;
 }
 
+/* Controls */
 .controls{
   display:grid; grid-template-columns: repeat(3, 1fr);
   gap:12px; margin:18px 0 12px;
@@ -66,10 +69,12 @@ select:focus{ box-shadow: 0 0 0 6px var(--ring); }
 .btn.ghost{ background:#0f1330; }
 .btn.tiny{ font-size:12px; padding:6px 10px; }
 
-.grid{ display:grid; gap:14px; grid-template-columns: repeat(3, 1fr); }
-@media (max-width: 980px){
-  .controls{ grid-template-columns: 1fr; }
-  .grid{ grid-template-columns: 1fr; }
+/* RESULTS GRID */
+/* ⬇ Auto-fit columns so cards wrap instead of overflowing */
+.grid{
+  display:grid; gap:14px;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  width:100%;
 }
 
 /* Pager shows only on small screens */
@@ -78,6 +83,7 @@ select:focus{ box-shadow: 0 0 0 6px var(--ring); }
   margin: 8px 0 14px;
 }
 @media (max-width: 980px){
+  .controls{ grid-template-columns: 1fr; }
   .pager{ display:flex; }
 }
 
@@ -85,8 +91,13 @@ select:focus{ box-shadow: 0 0 0 6px var(--ring); }
 .card-header{ display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
 .card h3{ margin:0; font-size:18px; }
 
-/* Tables: NO horizontal scroll; wrap long lists */
-.table-wrap{ overflow: hidden; border-radius:12px; border:1px solid #2a2f57; }
+/* Tables: keep everything inside card; no horizontal scroll */
+.table-wrap{
+  overflow: hidden;
+  border-radius:12px; border:1px solid #2a2f57;
+  /* ⬇ allow shrinking within grid cell */
+  min-width:0;
+}
 table{
   width:100%; border-collapse: collapse;
   background:#111534; table-layout: fixed;
@@ -94,16 +105,12 @@ table{
 thead{ background:#0e1230; }
 th, td{
   padding:10px 12px; text-align:left; border-bottom:1px solid #232752;
-  word-wrap: break-word; overflow-wrap: anywhere;
+  word-wrap: break-word; overflow-wrap:anywhere; white-space: normal;
 }
 tbody tr:last-child td{ border-bottom:none; }
 
-/* Result cards (for pager behavior) */
-.result-card{ display:block; }
-@media (max-width: 980px){
-  .result-card{ display:none; }
-  .result-card.active{ display:block; }
-}
+/* Result cards: ensure they can shrink within grid */
+.result-card{ display:block; min-width:0; }
 
 .notes{ margin:18px 0 8px; color:var(--muted); }
 details{ background:#0f1330; padding:10px 12px; border:1px solid #2a2f57; border-radius:12px; }
