@@ -29,17 +29,17 @@
 
         <div class="mascot">
           <!-- Update the src path to your image filename -->
-          <img src=".pokemon-science-desktop-3x7zz8u78clyq48r_edited_edited.avif" alt="Psyduck in lab coat" />
+          <img src="./assets/psyduck-lab.png" alt="Psyduck in lab coat" />
         </div>
 
         <button id="resetBtn" class="btn reset">Reset</button>
       </div>
 
-      <article class="card navy">
+      <article class="card navy tall">
         <header class="card-header">
           <h2>Primary Damage Dealt</h2>
         </header>
-        <div class="table-wrap">
+        <div class="table-wrap tall">
           <table id="primaryDealtTable">
             <thead>
               <tr><th>Category</th><th>Types</th></tr>
@@ -52,11 +52,11 @@
 
     <!-- Bottom area: Damage Taken (tan) + Secondary Damage Dealt (navy) -->
     <section class="bottom-grid">
-      <article class="card sand">
+      <article class="card sand tall">
         <header class="card-header">
           <h2>Damage Taken</h2>
         </header>
-        <div class="table-wrap">
+        <div class="table-wrap tall">
           <table id="damageTakenTable">
             <thead>
               <tr><th>Category</th><th>Types</th></tr>
@@ -66,11 +66,12 @@
         </div>
       </article>
 
-      <article class="card navy" id="secondaryCard" hidden>
+      <!-- NOTE: not hidden anymore; shows at load with placeholder rows -->
+      <article class="card navy tall" id="secondaryCard">
         <header class="card-header">
           <h2>Secondary Damage Dealt</h2>
         </header>
-        <div class="table-wrap">
+        <div class="table-wrap tall">
           <table id="secondaryDealtTable">
             <thead>
               <tr><th>Category</th><th>Types</th></tr>
@@ -89,5 +90,6 @@
   <script src="./app.js"></script>
 </body>
 </html>
+
 
 
